@@ -9,7 +9,7 @@ var bookSchema = new Schema(
     author: String,
     price: Number,
     page: Number,
-    commentId: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   },
   { timestamps: true }
 );

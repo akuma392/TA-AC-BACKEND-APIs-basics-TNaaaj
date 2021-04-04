@@ -6,11 +6,13 @@ var Comment = require('../models/comment');
 
 router.get('/', (req, res, next) => {
   console.log();
-  Book.find({}, (err, book) => {
-    if (err) return next(err);
+  Book.find({})
+    .populate('comments')
+    .exec((err, book) => {
+      if (err) return next(err);
 
-    res.json(book);
-  });
+      res.json(book);
+    });
 });
 
 router.get('/:id', (req, res, next) => {
@@ -33,8 +35,10 @@ router.delete('/:id', (req, res, next) => {
   let id = req.params.id;
   Book.findByIdAndDelete(id, (err, book) => {
     if (err) return next(err);
-
-    res.json(book);
+    Comment.deleteMany({ bookId: id }, (err, comment) => {
+      if (err) return next(err);
+      res.json(book);
+    });
   });
 });
 
