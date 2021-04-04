@@ -6,6 +6,7 @@ var logger = require('morgan');
 var mongoose = require('mongoose');
 var indexRouter = require('./routes/index');
 var bookRouter = require('./routes/books');
+var commentRouter = require('./routes/comment');
 
 mongoose.connect(
   'mongodb://localhost/books-api',
@@ -28,7 +29,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api', indexRouter);
-app.use('/api/books', bookRouter);
+app.use('/api/v1/books', bookRouter);
+app.use('/api/v2/books', commentRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
