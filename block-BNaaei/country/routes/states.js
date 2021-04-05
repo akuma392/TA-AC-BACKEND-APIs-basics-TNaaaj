@@ -37,8 +37,6 @@ router.delete('/:id', (req, res, next) => {
   let id = req.params.id;
   State.findByIdAndDelete(id, (err, state) => {
     if (err) return next(err);
-
-    if (err) return next(err);
     res.json(state);
   });
 });
