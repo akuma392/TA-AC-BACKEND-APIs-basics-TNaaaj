@@ -18,7 +18,7 @@ router.get('/', (req, res, next) => {
 
 // sort by ascending or descending
 
-router.get('/sort/name/ascending', (req, res, next) => {
+router.get('/country/sort/ascending', (req, res, next) => {
   console.log();
   Country.find({})
     .sort('name')
@@ -30,7 +30,7 @@ router.get('/sort/name/ascending', (req, res, next) => {
       res.json(country);
     });
 });
-router.get('/sort/name/descending', (req, res, next) => {
+router.get('/country/sort/descending', (req, res, next) => {
   console.log();
   Country.find({})
     .sort({ name: -1 })
@@ -43,10 +43,35 @@ router.get('/sort/name/descending', (req, res, next) => {
     });
 });
 
-router.get('/population', (req, res, next) => {
+router.get('/country/population', (req, res, next) => {
   console.log();
   Country.find({})
     .sort({ population: 1 })
+    .populate('neighbouring_countries')
+    .populate('states')
+    .exec((err, country) => {
+      if (err) return next(err);
+
+      res.json(country);
+    });
+});
+router.get('/country/religion', (req, res, next) => {
+  console.log();
+  Country.find({})
+    .sort({ religions: 1 })
+    .populate('neighbouring_countries')
+    .populate('states')
+    .exec((err, country) => {
+      if (err) return next(err);
+
+      res.json(country);
+    });
+});
+
+router.get('/country/continent', (req, res, next) => {
+  console.log();
+  Country.find({})
+    .sort({ continent: 1 })
     .populate('neighbouring_countries')
     .populate('states')
     .exec((err, country) => {
@@ -66,7 +91,14 @@ router.get('/:id', (req, res, next) => {
 router.put('/:id', (req, res, next) => {
   let id = req.params.id;
 
-  Country.findByIdAndUpdate(id, req.body, (err, country) => {
+  if (req.body.neighbouring_countries) {
+    console.log('hello');
+    var ops = {
+      $push: { neighbouring_countries: req.body.neighbouring_countries },
+    };
+  }
+  delete req.body.neighbouring_countries;
+  Country.findByIdAndUpdate(id, { ops, ...req.body }, (err, country) => {
     if (err) return next(err);
 
     res.json(country);
