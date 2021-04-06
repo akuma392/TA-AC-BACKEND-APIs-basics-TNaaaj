@@ -11,6 +11,7 @@ var bookSchema = new Schema(
     page: Number,
     category: [String],
     comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+    tags: String,
   },
   { timestamps: true }
 );
