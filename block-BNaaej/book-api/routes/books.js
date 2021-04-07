@@ -25,13 +25,16 @@ router.get('/category', (req, res, next) => {
 router.get('/category/books', (req, res, next) => {
   Book.aggregate([
     {
+      $unwind: '$category',
+    },
+    {
       $group: {
         _id: '$category',
         count: { $sum: 1 },
       },
     },
   ]).exec((err, book) => {
-    console.log(book);
+    res.json(book);
   });
 });
 
